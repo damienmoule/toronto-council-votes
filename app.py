@@ -30,7 +30,7 @@ navbar = dbc.NavbarSimple(
                 dbc.NavItem(dbc.NavLink("About",
                                         href=dash.page_registry['pages.about']['path'])),
                 dbc.NavItem(dbc.NavLink(class_name="bi bi-github",
-                                        href="/")),
+                                        href="https://github.com/damienmoule")),
                 dbc.NavItem(dbc.NavLink(class_name="bi bi-twitter",
                                         href="https://x.com/damienmoule"))
             ],
