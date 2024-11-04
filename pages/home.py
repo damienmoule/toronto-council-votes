@@ -12,12 +12,15 @@ from dash import dcc, html, Input, Output, callback
 import dash_bootstrap_components as dbc
 import pandas as pd
 import numpy as np
+from pathlib import Path
 
 #initate page and path
 dash.register_page(__name__,path='/')
 
+base = Path.cwd()
+
 #load tmmis voting data from spreadsheets
-tmmis_file = pd.ExcelFile('utils\similarity_tmmis.xlsx')
+tmmis_file = pd.ExcelFile(base.joinpath("utils","similarity_tmmis.xlsx"))
 tmmis_dict = dict.fromkeys(tmmis_file.sheet_names)
 for keys in tmmis_dict:
     tmmis_dict[keys] = pd.read_excel(tmmis_file,
@@ -26,7 +29,7 @@ for keys in tmmis_dict:
 tmmis_file.close()
 
 #load city hall watcher voting data from spreadsheets
-chw_file = pd.ExcelFile('utils\similarity_chw.xlsx')
+chw_file = pd.ExcelFile(base.joinpath("utils","similarity_chw.xlsx"))
 chw_dict = dict.fromkeys(chw_file.sheet_names)
 for keys in chw_dict:
     chw_dict[keys] = pd.read_excel(chw_file,
