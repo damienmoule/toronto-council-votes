@@ -71,8 +71,8 @@ for i,(k,f) in enumerate(tmmis_files.items()):
     votes = votes.droplevel(level=0, axis=1).transpose()
 
     #process the data to make it numerical and remove absents and vacants
-    votes = votes.replace(('Yes','No','Absent','Vacant'),
-                          (1,0,np.nan,np.nan))
+    votes = votes.replace(('Yes','No','Absent','Absent(Interest Declared)','Vacant'),
+                          (1,0,np.nan,np.nan,np.nan))
 
     #calculate similarity matrix in voting records between councillors
     similarity = vote_similarity(votes)

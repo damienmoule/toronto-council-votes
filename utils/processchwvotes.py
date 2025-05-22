@@ -53,21 +53,7 @@ for i,(k,f) in enumerate(chw_files.items()):
     votes = votes.drop(columns=list(votes.filter(regex='Unnamed')))
     votes = votes.drop(dropped_rows[i])
 
-    #for 2022-2026, have to deal with the time before Tory's resignation
-    #which is stored in another file and needs to be merged
-    if k == '2022-2026':
-        #load the pre-resignation file and make the same formatting changes as the rest
-        pre_resignation = pd.read_csv(tory_3t)
-        pre_resignation = pre_resignation.fillna('')
-        pre_resignation = pre_resignation.drop(columns=['SORT','SORT.1','Unnamed: 2',
-                                                        'Unnamed: 4','Unnamed: 5','Unnamed: 6',
-                                                        'Unnamed: 15','Unnamed: 16','Unnamed: 17',
-                                                        'Unnamed: 18'])
-        pre_resignation = pre_resignation.drop([0,1,2,29,30,31])
-        pre_resignation = pre_resignation.rename(columns={'Unnamed: 3':'Councillor'})
-        pre_resignation['Councillor'] = pre_resignation['Councillor'].str.split('\n').str[0]
-        #merge the pre-resignation dataframe into the votes dataframe
-        votes = votes.merge(pre_resignation,how='outer')
+
 
     #for wards that have replacement councillors
     #figure out where to one councillor's time starts and the
@@ -86,8 +72,25 @@ for i,(k,f) in enumerate(chw_files.items()):
 
     #append the replacements votes as new lines in the main dataframe
     votes = pd.concat([votes,replacements],ignore_index=True)
-    votes = votes.set_index('Councillor')
-    
+
+    #for 2022-2026, have to deal with the time before Tory's resignation
+    #which is stored in another file and needs to be merged
+    if k == '2022-2026':
+        #load the pre-resignation file and make the same formatting changes as the rest
+        pre_resignation = pd.read_csv(tory_3t)
+        pre_resignation = pre_resignation.fillna('')
+        pre_resignation = pre_resignation.drop(columns=['SORT','SORT.1','Unnamed: 2',
+                                                        'Unnamed: 4','Unnamed: 5','Unnamed: 6',
+                                                        'Unnamed: 15','Unnamed: 16','Unnamed: 17',
+                                                        'Unnamed: 18'])
+        pre_resignation = pre_resignation.drop([0,1,2,29,30,31])
+        pre_resignation = pre_resignation.rename(columns={'Unnamed: 3':'Councillor'})
+        pre_resignation['Councillor'] = pre_resignation['Councillor'].str.split('\n').str[0]
+
+        #merge the pre-resignation dataframe into the votes dataframe
+        votes = votes.merge(pre_resignation,how='outer',on='Councillor')
+
+    votes = votes.set_index('Councillor')    
     #process the data to make it numerical and remove absents and vacants
     votes = votes.replace(('Yes','No','Absent','Vacant',
                            'Conflict of Interest','Conflict of interest',
